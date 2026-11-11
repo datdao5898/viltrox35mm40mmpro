@@ -729,9 +729,8 @@ footer .copy{font-size:13.5px;color:var(--dim)}
               <em class="err">Số điện thoại chưa đúng (10 số, ví dụ 0901234567)</em>
             </label>
             <label class="field full">
-              <span>Địa chỉ <i>*</i></span>
-              <input type="text" name="address" autocomplete="street-address" maxlength="250" placeholder="Tỉnh / Thành phố" required>
-              <em class="err">Vui lòng nhập địa chỉ (ít nhất 2 từ)</em>
+              <span>Địa chỉ</span>
+              <input type="text" name="address" autocomplete="street-address" maxlength="250" placeholder="Tỉnh / Thành phố">
             </label>
             <label class="field full">
               <span>Ngành nghề <i>*</i></span>
@@ -824,7 +823,6 @@ const GOOGLE_FORM_ENTRIES = {
   const rules = {
     name: v => v.trim().length >= 2,
     phone: v => /^0[35789]\d{8}$/.test(normPhone(v)),
-    address: v => v.trim().split(/\s+/).filter(Boolean).length >= 2,
     job: v => !!v,
     jobOther: v => jobSel.value !== '__other' || v.trim().length >= 2
   };
