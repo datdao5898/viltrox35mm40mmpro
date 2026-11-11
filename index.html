@@ -377,7 +377,9 @@ section{position:relative}
 .info-grid small{display:block;font-family:var(--f-display);font-weight:700;font-size:11.5px;letter-spacing:.2em;color:var(--dim);margin-bottom:6px}
 .info-grid .t-meta{color:#fff;line-height:1.55}
 .info-grid .t-meta em{font-style:normal;color:var(--muted);font-weight:400;font-size:14px;display:block}
-.gift{color:var(--muted);font-size:16px;margin-bottom:34px}
+.gift{color:var(--muted);font-size:16px;margin-bottom:6px;text-wrap:balance}
+.final-card>p.gift{max-width:none}
+.gift-note{margin-bottom:34px}
 .gift b{color:#fff;font-weight:600}
 .final .hero-cta{justify-content:center}
 @media (max-width:900px){.info-grid{grid-template-columns:1fr 1fr}}
@@ -855,6 +857,7 @@ footer .copy{font-size:13.5px;color:var(--dim)}
         <div><small>CHI PHÍ</small><div class="t-meta">Miễn phí</div></div>
       </div>
       <p class="gift rv d3">Khách check-in sớm có cơ hội <b>nhận quà từ Viltrox Vietnam</b>.</p>
+      <p class="gift gift-note rv d3">Khách tham dự vui lòng mang <b>CCCD bản cứng</b> để đăng ký mượn lens trải nghiệm theo sở thích.</p>
 
       <div class="reg-card rv d3" id="form-dang-ky">
         <form id="regForm" novalidate>
