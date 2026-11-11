@@ -243,21 +243,34 @@ section{position:relative}
   .host2-hl li{grid-template-columns:1fr;gap:2px}
   .film-progress{width:64px}
 }
-/* ---------- concepts ---------- */
-.concepts{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
-.concept{position:relative;border-radius:var(--radius);overflow:hidden;aspect-ratio:3/4.4;background:var(--surface);isolation:isolate}
-.concept img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;transition:transform .9s cubic-bezier(.2,.7,.2,1)}
-.concept::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,.05) 25%,rgba(0,0,0,.55) 55%,rgba(0,0,0,.94))}
-.concept-body{position:absolute;inset:auto 0 0 0;padding:24px}
-.concept-num{font-family:var(--f-display);font-weight:800;font-size:15px;letter-spacing:.1em;color:var(--silver-2)}
-.concept .t-concept{margin:6px 0 4px;text-transform:uppercase;letter-spacing:.03em}
-.concept .sub{font-family:var(--f-body);font-weight:600;font-size:18px;line-height:1.4;color:#fff;margin-bottom:10px}
-.concept .desc{font-size:16px;line-height:1.6;color:#c9c9cf;max-height:0;opacity:0;overflow:hidden;transition:max-height .6s,opacity .5s}
-.concept:hover img{transform:scale(1.06)}
-.concept:hover .desc,.concept:focus-within .desc{max-height:220px;opacity:1}
-@media (hover:none){.concept .desc{max-height:none;opacity:1}}
-@media (max-width:1020px){.concepts{grid-template-columns:repeat(2,1fr)}}
-@media (max-width:560px){.concepts{grid-template-columns:1fr}.concept{aspect-ratio:4/4.6}.concept .desc{max-height:none;opacity:1}}
+/* ---------- concepts (panel mở rộng) ---------- */
+.cx{display:flex;gap:12px;height:620px}
+.cx-item{position:relative;flex:1 1 0;min-width:0;border-radius:var(--radius);overflow:hidden;cursor:pointer;background:var(--surface);isolation:isolate;
+  transition:flex-grow .7s cubic-bezier(.2,.7,.2,1);outline:none}
+.cx-item.is-active{flex-grow:3.6;cursor:default}
+.cx-item:focus-visible{box-shadow:0 0 0 2px #fff}
+.cx-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2;filter:grayscale(1) brightness(.45);transform:scale(1.04);transition:filter .7s,transform 1.2s cubic-bezier(.2,.7,.2,1)}
+.cx-item:hover .cx-img{filter:grayscale(.6) brightness(.6)}
+.cx-item.is-active .cx-img{filter:none;transform:none}
+.cx-item::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,0) 30%,rgba(0,0,0,.35) 100%);pointer-events:none}
+.cx-closed{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:space-between;align-items:center;padding:24px 0;transition:opacity .35s}
+.cx-item.is-active .cx-closed{opacity:0;pointer-events:none}
+.cx-num{font-family:var(--f-display);font-weight:700;font-size:13px;letter-spacing:.16em;color:var(--silver-2)}
+.cx-vtitle{writing-mode:vertical-rl;transform:rotate(180deg);font-family:var(--f-display);font-weight:700;font-size:20px;letter-spacing:.08em;text-transform:uppercase;color:#fff;white-space:nowrap}
+.cx-body{position:absolute;left:16px;right:16px;bottom:16px;max-width:560px;padding:24px 26px 26px;border-radius:14px;
+  background:rgba(12,12,14,.9);border:1px solid var(--line-2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  opacity:0;transform:translateY(14px);visibility:hidden;transition:opacity .35s,transform .45s,visibility 0s .45s}
+.cx-item.is-active .cx-body{opacity:1;transform:none;visibility:visible;transition:opacity .45s .3s,transform .55s .3s,visibility 0s}
+.cx-body .t-concept{margin:8px 0 6px;text-transform:uppercase;letter-spacing:.03em}
+.cx-sub{font-family:var(--f-body);font-weight:600;font-size:18px;line-height:1.45;color:#fff;margin-bottom:10px}
+.cx-desc{font-size:16px;line-height:1.65;color:#d0d1d6}
+@media (max-width:1020px){
+  .cx{flex-direction:column;height:auto;gap:16px}
+  .cx-item{flex:none;cursor:default;display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line)}
+  .cx-item::after,.cx-closed{display:none}
+  .cx-img{position:relative;inset:auto;height:auto;aspect-ratio:16/10;filter:none!important;transform:none!important;z-index:0}
+  .cx-body{position:static;max-width:none;opacity:1;transform:none;visibility:visible;background:none;border:0;border-radius:0;backdrop-filter:none;-webkit-backdrop-filter:none;padding:20px 20px 24px}
+}
 
 /* ---------- tech ---------- */
 .tech{display:grid;grid-template-columns:1fr 1fr;gap:24px}
@@ -612,41 +625,45 @@ footer .copy{font-size:13.5px;color:var(--dim)}
       <p>Cùng <strong>NAG Tuấn Nguyễn</strong> và <strong>NAG Danny Nguyễn</strong>, khám phá cách hai tiêu cự 35mm và 40mm tạo nên những góc nhìn khác nhau trong nhiếp ảnh chân dung. Từ những chia sẻ chuyên môn đến trải nghiệm thực tế, bạn sẽ có cơ hội thử trực tiếp <strong>Viltrox AF 35mm F1.4 Pro</strong> và <strong>Viltrox AF 40mm F1.2 Pro</strong> tại bốn concept chụp được thiết kế riêng cho sự kiện.</p>
     </div>
 
-    <div class="concepts">
-      <article class="concept rv" tabindex="0">
-        <img src="assets/concept-dancer.webp" alt="Concept Dancer" loading="lazy">
-        <div class="concept-body">
-          <div class="concept-num">01</div>
+    <div class="cx rv" data-concepts>
+      <article class="cx-item is-active" tabindex="0" aria-expanded="true" aria-label="Concept 01: Dancer">
+        <img class="cx-img" src="assets/concept-dancer.webp" alt="Concept Dancer" loading="lazy">
+        <div class="cx-closed" aria-hidden="true"><span class="cx-num">01</span><span class="cx-vtitle">Dancer</span></div>
+        <div class="cx-body">
+          <span class="cx-num">01 / 04</span>
           <h3 class="t-concept">Dancer</h3>
-          <p class="sub">Bắt trọn chuyển động và cảm xúc</p>
-          <p class="desc">Chân dung vũ đạo không chỉ nằm ở một tư thế đẹp mà còn ở khả năng ghi lại đúng khoảnh khắc chuyển động. Khám phá cách lựa chọn thời điểm bấm máy, bắt nét và khai thác ánh sáng để làm nổi bật hình thể, biểu cảm của nhân vật.</p>
+          <p class="cx-sub">Bắt trọn chuyển động và cảm xúc</p>
+          <p class="cx-desc">Chân dung vũ đạo không chỉ nằm ở một tư thế đẹp mà còn ở khả năng ghi lại đúng khoảnh khắc chuyển động. Khám phá cách lựa chọn thời điểm bấm máy, bắt nét và khai thác ánh sáng để làm nổi bật hình thể, biểu cảm của nhân vật.</p>
         </div>
       </article>
-      <article class="concept rv d1" tabindex="0">
-        <img src="assets/concept-camky.webp" alt="Concept Cầm kỳ thi họa" loading="lazy">
-        <div class="concept-body">
-          <div class="concept-num">02</div>
+      <article class="cx-item" tabindex="0" aria-expanded="false" aria-label="Concept 02: Cầm kỳ thi họa">
+        <img class="cx-img" src="assets/concept-camky.webp" alt="Concept Cầm kỳ thi họa" loading="lazy">
+        <div class="cx-closed" aria-hidden="true"><span class="cx-num">02</span><span class="cx-vtitle">Cầm kỳ thi họa</span></div>
+        <div class="cx-body">
+          <span class="cx-num">02 / 04</span>
           <h3 class="t-concept">Cầm kỳ thi họa</h3>
-          <p class="sub">Chân dung mang dấu ấn văn hóa</p>
-          <p class="desc">Trang phục, nhạc cụ và những chi tiết mang hơi thở truyền thống tạo nên một không gian giàu chất liệu hình ảnh. Thử nghiệm cách sắp xếp bố cục, kiểm soát màu sắc và ánh sáng để thể hiện thần thái nhân vật cùng tinh thần của bối cảnh.</p>
+          <p class="cx-sub">Chân dung mang dấu ấn văn hóa</p>
+          <p class="cx-desc">Trang phục, nhạc cụ và những chi tiết mang hơi thở truyền thống tạo nên một không gian giàu chất liệu hình ảnh. Thử nghiệm cách sắp xếp bố cục, kiểm soát màu sắc và ánh sáng để thể hiện thần thái nhân vật cùng tinh thần của bối cảnh.</p>
         </div>
       </article>
-      <article class="concept rv d2" tabindex="0">
-        <img src="assets/concept-cosplay.webp" alt="Concept Cosplay" loading="lazy">
-        <div class="concept-body">
-          <div class="concept-num">03</div>
+      <article class="cx-item" tabindex="0" aria-expanded="false" aria-label="Concept 03: Cosplay">
+        <img class="cx-img" src="assets/concept-cosplay.webp" alt="Concept Cosplay" loading="lazy">
+        <div class="cx-closed" aria-hidden="true"><span class="cx-num">03</span><span class="cx-vtitle">Cosplay</span></div>
+        <div class="cx-body">
+          <span class="cx-num">03 / 04</span>
           <h3 class="t-concept">Cosplay</h3>
-          <p class="sub">Tái hiện cá tính và thế giới nhân vật</p>
-          <p class="desc">Mỗi nhân vật đều có một câu chuyện riêng qua tạo hình, trang phục và biểu cảm. Khám phá cách lựa chọn góc chụp, khai thác ánh sáng và làm nổi bật những chi tiết tạo nên dấu ấn của nhân vật.</p>
+          <p class="cx-sub">Tái hiện cá tính và thế giới nhân vật</p>
+          <p class="cx-desc">Mỗi nhân vật đều có một câu chuyện riêng qua tạo hình, trang phục và biểu cảm. Khám phá cách lựa chọn góc chụp, khai thác ánh sáng và làm nổi bật những chi tiết tạo nên dấu ấn của nhân vật.</p>
         </div>
       </article>
-      <article class="concept rv d3" tabindex="0">
-        <img src="assets/concept-fashion.webp" alt="Concept Fashion" loading="lazy">
-        <div class="concept-body">
-          <div class="concept-num">04</div>
+      <article class="cx-item" tabindex="0" aria-expanded="false" aria-label="Concept 04: Fashion">
+        <img class="cx-img" src="assets/concept-fashion.webp" alt="Concept Fashion" loading="lazy">
+        <div class="cx-closed" aria-hidden="true"><span class="cx-num">04</span><span class="cx-vtitle">Fashion</span></div>
+        <div class="cx-body">
+          <span class="cx-num">04 / 04</span>
           <h3 class="t-concept">Fashion</h3>
-          <p class="sub">Tôn vinh phong cách qua từng khung hình</p>
-          <p class="desc">Chất liệu trang phục, đường nét cơ thể và cách tạo dáng là những yếu tố quan trọng trong ảnh thời trang. Thử nghiệm cách kiểm soát ánh sáng, bố cục và chiều sâu để làm nổi bật phong cách, chất liệu và thần thái người mẫu.</p>
+          <p class="cx-sub">Tôn vinh phong cách qua từng khung hình</p>
+          <p class="cx-desc">Chất liệu trang phục, đường nét cơ thể và cách tạo dáng là những yếu tố quan trọng trong ảnh thời trang. Thử nghiệm cách kiểm soát ánh sáng, bố cục và chiều sâu để làm nổi bật phong cách, chất liệu và thần thái người mẫu.</p>
         </div>
       </article>
     </div>
@@ -988,6 +1005,20 @@ const GOOGLE_FORM_ENTRIES = {
     cd('m').textContent = pad(Math.floor(s / 60)); cd('s').textContent = pad(s % 60);
   };
   tick(); setInterval(tick, 1000);
+
+  // concept: panel mở rộng
+  document.querySelectorAll('[data-concepts]').forEach(wrap => {
+    const items = [...wrap.querySelectorAll('.cx-item')];
+    const activate = it => items.forEach(x => { const on = x === it; x.classList.toggle('is-active', on); x.setAttribute('aria-expanded', on); });
+    items.forEach((it, i) => {
+      it.addEventListener('mouseenter', () => matchMedia('(hover:hover) and (min-width:1021px)').matches && activate(it));
+      it.addEventListener('click', () => activate(it));
+      it.addEventListener('focus', () => activate(it));
+      it.addEventListener('keydown', e => {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') { e.preventDefault(); items[(i + (e.key === 'ArrowRight' ? 1 : items.length - 1)) % items.length].focus(); }
+      });
+    });
+  });
 
   // album dạng cuộn phim: nút trước/sau + thanh tiến độ
   document.querySelectorAll('[data-film]').forEach(film => {
