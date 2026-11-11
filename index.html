@@ -720,18 +720,18 @@ footer .copy{font-size:13.5px;color:var(--dim)}
           <div class="reg-grid">
             <label class="field">
               <span>Họ và tên <i>*</i></span>
-              <input type="text" name="name" autocomplete="name" maxlength="100" placeholder="Nguyễn Văn A" required>
+              <input type="text" name="name" autocomplete="name" maxlength="100" placeholder="Họ &amp; tên" required>
               <em class="err">Vui lòng nhập họ và tên</em>
             </label>
             <label class="field">
               <span>Số điện thoại <i>*</i></span>
-              <input type="tel" name="phone" autocomplete="tel" inputmode="tel" maxlength="16" placeholder="09xx xxx xxx" required>
+              <input type="tel" name="phone" autocomplete="tel" inputmode="tel" maxlength="16" placeholder="Số điện thoại" required>
               <em class="err">Số điện thoại chưa đúng (10 số, ví dụ 0901234567)</em>
             </label>
             <label class="field full">
               <span>Địa chỉ <i>*</i></span>
               <input type="text" name="address" autocomplete="street-address" maxlength="250" placeholder="Số nhà, đường, phường/xã, tỉnh/thành phố" required>
-              <em class="err">Vui lòng nhập địa chỉ</em>
+              <em class="err">Vui lòng nhập địa chỉ (ít nhất 2 từ)</em>
             </label>
             <label class="field full">
               <span>Ngành nghề <i>*</i></span>
@@ -824,7 +824,7 @@ const GOOGLE_FORM_ENTRIES = {
   const rules = {
     name: v => v.trim().length >= 2,
     phone: v => /^0[35789]\d{8}$/.test(normPhone(v)),
-    address: v => v.trim().length >= 5,
+    address: v => v.trim().split(/\s+/).filter(Boolean).length >= 2,
     job: v => !!v,
     jobOther: v => jobSel.value !== '__other' || v.trim().length >= 2
   };
