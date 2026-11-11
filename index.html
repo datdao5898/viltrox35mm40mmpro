@@ -793,10 +793,12 @@ footer .copy{font-size:13.5px;color:var(--dim)}
 </div>
 
 <script>
-/* ====== CẤU HÌNH: dán URL webhook của Lark Base Automation ("Khi nhận được webhook") ======
-   Dữ liệu gửi đi (JSON): ho_ten, so_dien_thoai, dia_chi, nganh_nghe, thoi_gian, nguon            */
+/* ====== CẤU HÌNH: link nhận dữ liệu form đăng ký ======
+   - Google Sheet: "URL ứng dụng web" của Apps Script (https://script.google.com/macros/s/…/exec) – xem apps-script/Code.gs
+   - Lark Base:    URL webhook của Automation "Khi nhận được webhook"
+   Dữ liệu gửi đi (JSON): ho_ten, so_dien_thoai, dia_chi, nganh_nghe, thoi_gian, nguon                    */
 const FORM_ENDPOINT = "";
-/* ============================================================================================== */
+/* ====================================================================================================== */
 
 (() => {
   // các nút "Đăng ký" cuộn tới form và đặt con trỏ vào ô đầu tiên
@@ -824,15 +826,22 @@ const FORM_ENDPOINT = "";
   Object.keys(rules).forEach(n => { const el = F(n); el.addEventListener('blur', () => el.value && check(el)); el.addEventListener('input', () => el.closest('.field').classList.contains('invalid') && check(el)); });
 
   const showDone = () => { form.hidden = true; const d = document.getElementById('regDone'); d.hidden = false; d.focus(); };
-  // Gửi tới webhook Lark. Nếu trình duyệt chặn đọc phản hồi (CORS) thì gửi lại dạng no-cors:
-  // khi preflight bị chặn, request đầu chưa hề được gửi nên không bị trùng bản ghi.
-  async function sendToLark(data) {
+  // Gửi dữ liệu. Google Apps Script: POST text/plain (không preflight, đọc được phản hồi).
+  // Lark/webhook khác: POST JSON; nếu trình duyệt chặn CORS thì gửi lại dạng no-cors
+  // (preflight bị chặn nghĩa là request đầu chưa được gửi, nên không bị trùng bản ghi).
+  async function sendForm(data) {
     const body = JSON.stringify(data);
+    if (/script\.google(usercontent)?\.com/.test(FORM_ENDPOINT)) {
+      const res = await fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body });
+      const out = await res.json();
+      if (!out.ok) throw new Error(out.error || 'Apps Script error');
+      return;
+    }
     try {
       const res = await fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body });
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const out = await res.json().catch(() => ({}));
-      if (out.code !== undefined && out.code !== 0) throw new Error(out.msg || 'Lark error ' + out.code);
+      if (out.code !== undefined && out.code !== 0) throw new Error(out.msg || 'Webhook error ' + out.code);
     } catch (err) {
       if (!(err instanceof TypeError)) throw err;
       await fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body });
@@ -857,7 +866,7 @@ const FORM_ENDPOINT = "";
     };
     btn.disabled = true; const label = btn.firstChild.textContent; btn.firstChild.textContent = 'ĐANG GỬI… ';
     try {
-      await sendToLark(payload);
+      await sendForm(payload);
       showDone();
       try { localStorage.setItem('viltrox_registered', '1'); } catch (_) {}
     } catch (err) {
