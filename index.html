@@ -793,11 +793,17 @@ footer .copy{font-size:13.5px;color:var(--dim)}
 </div>
 
 <script>
-/* ====== CẤU HÌNH: link nhận dữ liệu form đăng ký ======
-   - Google Sheet: "URL ứng dụng web" của Apps Script (https://script.google.com/macros/s/…/exec) – xem apps-script/Code.gs
-   - Lark Base:    URL webhook của Automation "Khi nhận được webhook"
-   Dữ liệu gửi đi (JSON): ho_ten, so_dien_thoai, dia_chi, nganh_nghe, thoi_gian, nguon                    */
-const FORM_ENDPOINT = "";
+/* ====== CẤU HÌNH form đăng ký ======
+   Đang dùng Google Form (đổ vào Google Sheet viltrox35mm40mmpro, tab "Câu trả lời biểu mẫu 1").
+   - Google Form: link .../formResponse + mã entry của từng câu hỏi bên dưới
+   - Lark Base:   đổi FORM_ENDPOINT thành URL webhook "Khi nhận được webhook" (JSON: ho_ten, so_dien_thoai, dia_chi, nganh_nghe, thoi_gian, nguon) */
+const FORM_ENDPOINT = "https://docs.google.com/forms/d/e/1FAIpQLSc2kDJiKhxGAvNYeOH8skAY204x8w9UL_GGKLYBwYXhTR-BnA/formResponse";
+const GOOGLE_FORM_ENTRIES = {
+  ho_ten: "entry.709809233",
+  so_dien_thoai: "entry.953477817",
+  dia_chi: "entry.1816536837",
+  nganh_nghe: "entry.708504243"
+};
 /* ====================================================================================================== */
 
 (() => {
@@ -830,6 +836,13 @@ const FORM_ENDPOINT = "";
   // Lark/webhook khác: POST JSON; nếu trình duyệt chặn CORS thì gửi lại dạng no-cors
   // (preflight bị chặn nghĩa là request đầu chưa được gửi, nên không bị trùng bản ghi).
   async function sendForm(data) {
+    // Google Form: gửi dạng form-urlencoded, no-cors (Google không trả CORS nên không đọc được phản hồi)
+    if (FORM_ENDPOINT.includes('docs.google.com/forms/')) {
+      const fd = new URLSearchParams();
+      Object.entries(GOOGLE_FORM_ENTRIES).forEach(([k, entry]) => fd.append(entry, data[k] || ''));
+      await fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', body: fd });
+      return;
+    }
     const body = JSON.stringify(data);
     if (/script\.google(usercontent)?\.com/.test(FORM_ENDPOINT)) {
       const res = await fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body });
