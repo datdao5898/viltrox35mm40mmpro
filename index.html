@@ -304,6 +304,37 @@ section{position:relative}
 @media (max-width:900px){.info-grid{grid-template-columns:1fr 1fr}}
 @media (max-width:520px){.info-grid{grid-template-columns:1fr}.final{padding:90px 0}}
 
+
+/* ---------- form đăng ký ---------- */
+.reg-card{max-width:760px;margin:8px auto 0;text-align:left;padding:36px;border:1px solid var(--line-2);border-radius:var(--radius);background:rgba(16,16,19,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);box-shadow:0 30px 80px -30px rgba(0,0,0,.8)}
+.reg-title{font-family:var(--f-display);font-weight:700;font-size:clamp(20px,2vw,24px);letter-spacing:.02em;margin-bottom:22px}
+.reg-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px 16px}
+.field{display:flex;flex-direction:column;gap:8px}
+.field.full{grid-column:1/-1}
+.field[hidden],.reg-done[hidden],#regForm[hidden]{display:none}
+.field>span{font-family:var(--f-body);font-weight:500;font-size:15px;color:#e8e8ec}
+.field>span i{color:var(--accent);font-style:normal}
+.field input,.field select{font:400 16px/1.4 var(--f-body);color:#fff;background:var(--surface-2);border:1px solid var(--line-2);border-radius:12px;padding:14px 16px;width:100%;outline:none;transition:border-color .2s,box-shadow .2s;appearance:none;-webkit-appearance:none}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23b9bcc4' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:44px;cursor:pointer}
+.field select:invalid{color:var(--dim)}
+.field select option{color:#111;background:#fff}
+.field input::placeholder{color:var(--dim)}
+.field input:focus,.field select:focus{border-color:#fff;box-shadow:0 0 0 3px rgba(255,255,255,.12)}
+.field .err{display:none;font-style:normal;font-size:14px;color:#ff8a8f}
+.field.invalid input,.field.invalid select{border-color:#ff5a61;box-shadow:0 0 0 3px rgba(227,38,45,.15)}
+.field.invalid .err{display:block}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;overflow:hidden}
+.reg-actions{display:flex;gap:14px;flex-wrap:wrap;margin-top:28px}
+.reg-actions .btn-primary{flex:1;min-width:240px}
+.btn[disabled]{opacity:.7;cursor:progress}
+.reg-msg{margin-top:16px;font-size:15px;min-height:1px}
+.reg-msg.error{color:#ff8a8f}
+.reg-done{text-align:center;padding:12px 0;outline:none}
+.reg-done p{color:#d4d5da}
+.reg-check{width:64px;height:64px;margin:0 auto 18px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(180deg,#fff,#c9ccd3);color:#0a0a0b;box-shadow:0 0 40px rgba(255,255,255,.35)}
+.reg-check svg{width:30px;height:30px}
+@media (max-width:640px){.reg-card{padding:24px 18px}.reg-grid{grid-template-columns:1fr}.reg-actions .btn{flex:1 1 100%}}
+
 /* ---------- footer ---------- */
 footer{border-top:1px solid var(--line);padding:40px 0 110px}
 footer .wrap{display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
@@ -682,11 +713,59 @@ footer .copy{font-size:13.5px;color:var(--dim)}
         <div><small>CHI PHÍ</small><div class="t-meta">Miễn phí</div></div>
       </div>
       <p class="gift rv d3">Khách check-in sớm có cơ hội <b>nhận quà từ Viltrox Vietnam</b>.</p>
-      <div class="hero-cta rv d3">
-        <a href="#dang-ky" class="btn btn-primary btn-bling" data-register>ĐĂNG KÝ THAM DỰ NGAY
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
-        <a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&query=Nina+Next+Space+180%2F1+Nguy%E1%BB%85n+T%E1%BA%A5t+Th%C3%A0nh+Ho+Chi+Minh" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Chỉ đường</a>
+
+      <div class="reg-card rv d3" id="form-dang-ky">
+        <form id="regForm" novalidate>
+          <h3 class="reg-title">ĐĂNG KÝ THAM DỰ</h3>
+          <div class="reg-grid">
+            <label class="field">
+              <span>Họ và tên <i>*</i></span>
+              <input type="text" name="name" autocomplete="name" maxlength="100" placeholder="Nguyễn Văn A" required>
+              <em class="err">Vui lòng nhập họ và tên</em>
+            </label>
+            <label class="field">
+              <span>Số điện thoại <i>*</i></span>
+              <input type="tel" name="phone" autocomplete="tel" inputmode="tel" maxlength="16" placeholder="09xx xxx xxx" required>
+              <em class="err">Số điện thoại chưa đúng (10 số, ví dụ 0901234567)</em>
+            </label>
+            <label class="field full">
+              <span>Địa chỉ <i>*</i></span>
+              <input type="text" name="address" autocomplete="street-address" maxlength="250" placeholder="Số nhà, đường, phường/xã, tỉnh/thành phố" required>
+              <em class="err">Vui lòng nhập địa chỉ</em>
+            </label>
+            <label class="field full">
+              <span>Ngành nghề <i>*</i></span>
+              <select name="job" required>
+                <option value="" selected disabled>Chọn ngành nghề</option>
+                <option>Nhiếp ảnh gia chuyên nghiệp</option>
+                <option>Nhiếp ảnh gia bán chuyên</option>
+                <option>Người đam mê nhiếp ảnh</option>
+                <option>Content creator &amp; nhà sáng tạo hình ảnh</option>
+                <option value="__other">Khác</option>
+              </select>
+              <em class="err">Vui lòng chọn ngành nghề</em>
+            </label>
+            <label class="field full" id="jobOtherWrap" hidden>
+              <span>Ngành nghề khác <i>*</i></span>
+              <input type="text" name="jobOther" maxlength="100" placeholder="Nhập ngành nghề của bạn">
+              <em class="err">Vui lòng nhập ngành nghề</em>
+            </label>
+            <label class="hp" aria-hidden="true">Website<input type="text" name="website" tabindex="-1" autocomplete="off"></label>
+          </div>
+          <div class="reg-actions">
+            <button type="submit" class="btn btn-primary btn-bling" id="regSubmit">ĐĂNG KÝ THAM DỰ NGAY
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+            <a class="btn btn-ghost" href="https://www.google.com/maps/search/?api=1&amp;query=Nina+Next+Space+180%2F1+Nguy%E1%BB%85n+T%E1%BA%A5t+Th%C3%A0nh+Ho+Chi+Minh" target="_blank" rel="noopener">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Chỉ đường</a>
+          </div>
+          <p class="reg-msg" id="regMsg" role="status" aria-live="polite"></p>
+        </form>
+        <div class="reg-done" id="regDone" hidden tabindex="-1">
+          <div class="reg-check"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+          <h3 class="reg-title">ĐĂNG KÝ THÀNH CÔNG</h3>
+          <p>Hẹn gặp bạn tại <b>Viltrox Launch Event</b><br>13:00 – 17:00, Thứ Bảy 05/12/2026<br>Nina Next Space – Sảnh 600 m², 180/1 Nguyễn Tất Thành, Xóm Chiếu, TP. Hồ Chí Minh</p>
+          <p class="muted" style="margin-top:12px">Check-in từ 12:00 – 13:00. Khách check-in sớm có cơ hội nhận quà từ Viltrox Vietnam.</p>
+        </div>
       </div>
     </div>
   </div>
@@ -714,13 +793,58 @@ footer .copy{font-size:13.5px;color:var(--dim)}
 </div>
 
 <script>
-/* ====== CẤU HÌNH: dán link form đăng ký (Google Form / Ladipage...) vào đây ====== */
-const REGISTER_URL = "";
-/* ================================================================================ */
+/* ====== CẤU HÌNH: dán "URL ứng dụng web" của Google Apps Script (xem apps-script/Code.gs) ====== */
+const FORM_ENDPOINT = "";
+/* ============================================================================================== */
 
 (() => {
-  if (REGISTER_URL) document.querySelectorAll('[data-register]').forEach(a => { a.href = REGISTER_URL; a.target = '_blank'; a.rel = 'noopener'; });
-  else console.warn('[Viltrox LP] Chưa cấu hình REGISTER_URL – nút đăng ký đang trỏ về #dang-ky');
+  // các nút "Đăng ký" cuộn tới form và đặt con trỏ vào ô đầu tiên
+  document.querySelectorAll('a[data-register]').forEach(a => a.addEventListener('click', e => {
+    e.preventDefault();
+    document.getElementById('form-dang-ky').scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' });
+    setTimeout(() => { const f = document.querySelector('#regForm [name=name]'); f && f.focus({ preventScroll: true }); }, 600);
+  }));
+
+  // form đăng ký
+  const form = document.getElementById('regForm');
+  const msg = document.getElementById('regMsg'), btn = document.getElementById('regSubmit');
+  const F = n => form.elements[n];
+  const jobSel = F('job'), otherWrap = document.getElementById('jobOtherWrap');
+  jobSel.addEventListener('change', () => { otherWrap.hidden = jobSel.value !== '__other'; if (!otherWrap.hidden) F('jobOther').focus(); });
+  const normPhone = v => { let p = v.replace(/[^\d+]/g, ''); if (p.startsWith('+84')) p = '0' + p.slice(3); else if (p.startsWith('84') && p.length === 11) p = '0' + p.slice(2); return p; };
+  const rules = {
+    name: v => v.trim().length >= 2,
+    phone: v => /^0[35789]\d{8}$/.test(normPhone(v)),
+    address: v => v.trim().length >= 5,
+    job: v => !!v,
+    jobOther: v => jobSel.value !== '__other' || v.trim().length >= 2
+  };
+  const check = el => { const ok = rules[el.name](el.value); el.closest('.field').classList.toggle('invalid', !ok); el.setAttribute('aria-invalid', !ok); return ok; };
+  Object.keys(rules).forEach(n => { const el = F(n); el.addEventListener('blur', () => el.value && check(el)); el.addEventListener('input', () => el.closest('.field').classList.contains('invalid') && check(el)); });
+
+  form.addEventListener('submit', async e => {
+    e.preventDefault();
+    msg.textContent = ''; msg.className = 'reg-msg';
+    const bad = Object.keys(rules).map(n => F(n)).filter(el => !check(el));
+    if (bad.length) { bad[0].focus(); return; }
+    if (!FORM_ENDPOINT) { msg.textContent = 'Form đăng ký đang được cập nhật, vui lòng quay lại sau ít phút.'; msg.className = 'reg-msg error'; console.warn('[Viltrox LP] Chưa cấu hình FORM_ENDPOINT'); return; }
+    const payload = {
+      name: F('name').value.trim(), phone: normPhone(F('phone').value), address: F('address').value.trim(),
+      job: jobSel.value === '__other' ? F('jobOther').value.trim() : jobSel.value,
+      website: F('website').value, source: location.href, ua: navigator.userAgent
+    };
+    btn.disabled = true; const label = btn.firstChild.textContent; btn.firstChild.textContent = 'ĐANG GỬI… ';
+    try {
+      const res = await fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
+      const out = await res.json().catch(() => ({ ok: res.ok }));
+      if (!out.ok) throw new Error(out.error || 'failed');
+      form.hidden = true; const done = document.getElementById('regDone'); done.hidden = false; done.focus();
+      try { localStorage.setItem('viltrox_registered', '1'); } catch (_) {}
+    } catch (err) {
+      console.error('[Viltrox LP] Gửi form lỗi', err);
+      msg.textContent = 'Chưa gửi được đăng ký, vui lòng kiểm tra kết nối mạng và thử lại.'; msg.className = 'reg-msg error';
+    } finally { btn.disabled = false; btn.firstChild.textContent = label; }
+  });
 
   // sao lấp lánh cho các nút CTA lớn
   const SPOTS = [['t',-11,'6%',18,0],['t',-13,'44%',13,.7],['t',-10,'84%',20,1.3],['b',-10,'20%',15,.4],['b',-13,'64%',20,1],['l',-12,'34%',14,1.7],['r',-12,'40%',17,.2],['t',-16,'64%',10,2]];
