@@ -99,8 +99,8 @@ strong{font-weight:600;color:#fff}
 /* ---------- hero (KV banner) ---------- */
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 .hero{padding-top:72px;background:#000}
-.kv{position:relative;max-width:min(1920px,calc((100svh - 72px) * 16 / 9));margin:0 auto}
-.kv img{width:100%;height:auto;aspect-ratio:16/9;object-fit:cover}
+.kv{position:relative;width:100%}
+.kv img{display:block;width:100%;height:auto}
 .hero-bar{position:relative;z-index:2;margin-top:clamp(20px,3vw,36px);display:grid;grid-template-columns:1fr auto;gap:32px 48px;align-items:center;padding:32px 36px;border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg,var(--surface),var(--bg-2))}
 .hero-tag{font-family:var(--f-display);font-weight:600;font-size:clamp(20px,2vw,24px);line-height:1.3;margin:16px 0 18px}
 .hero-info{display:grid;grid-template-columns:auto 1fr;gap:12px 14px}
@@ -124,7 +124,6 @@ strong{font-weight:600;color:#fff}
 .nav:not(.scrolled) .nav-logo{opacity:0;pointer-events:none}
 @media (max-width:920px){
   .hero{padding-top:64px}
-  .kv{max-width:none}
   .hero-bar{grid-template-columns:1fr;padding:26px 22px}
   .hero-bar-cta{align-items:stretch}
   .nav:not(.scrolled) .nav-logo{opacity:1;pointer-events:auto}
@@ -472,7 +471,7 @@ footer .copy{font-size:13.5px;color:var(--dim)}
   <div class="kv">
     <img src="assets/kv-2560.webp"
          srcset="assets/kv-960.webp 960w, assets/kv-1600.webp 1600w, assets/kv-2560.webp 2560w"
-         sizes="(min-width:1920px) 1920px, 100vw" width="2560" height="1440" fetchpriority="high"
+         sizes="100vw" width="2560" height="1303" fetchpriority="high"
          alt="Viltrox Launch Event – AF 35mm F1.4 Pro &amp; AF 40mm F1.2 Pro. Topic: Portrait Photography. Host: Tuấn Nguyễn &amp; Danny Nguyễn. 13:00–17:00, 05/12 tại Nina Next Space, 180/1 Đ. Nguyễn Tất Thành, Xóm Chiếu, Hồ Chí Minh.">
   </div>
   <div class="wrap">
