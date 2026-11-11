@@ -793,7 +793,8 @@ footer .copy{font-size:13.5px;color:var(--dim)}
 </div>
 
 <script>
-/* ====== CẤU HÌNH: dán "URL ứng dụng web" của Google Apps Script (xem apps-script/Code.gs) ====== */
+/* ====== CẤU HÌNH: dán URL webhook của Lark Base Automation ("Khi nhận được webhook") ======
+   Dữ liệu gửi đi (JSON): ho_ten, so_dien_thoai, dia_chi, nganh_nghe, thoi_gian, nguon            */
 const FORM_ENDPOINT = "";
 /* ============================================================================================== */
 
@@ -822,23 +823,42 @@ const FORM_ENDPOINT = "";
   const check = el => { const ok = rules[el.name](el.value); el.closest('.field').classList.toggle('invalid', !ok); el.setAttribute('aria-invalid', !ok); return ok; };
   Object.keys(rules).forEach(n => { const el = F(n); el.addEventListener('blur', () => el.value && check(el)); el.addEventListener('input', () => el.closest('.field').classList.contains('invalid') && check(el)); });
 
+  const showDone = () => { form.hidden = true; const d = document.getElementById('regDone'); d.hidden = false; d.focus(); };
+  // Gửi tới webhook Lark. Nếu trình duyệt chặn đọc phản hồi (CORS) thì gửi lại dạng no-cors:
+  // khi preflight bị chặn, request đầu chưa hề được gửi nên không bị trùng bản ghi.
+  async function sendToLark(data) {
+    const body = JSON.stringify(data);
+    try {
+      const res = await fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body });
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const out = await res.json().catch(() => ({}));
+      if (out.code !== undefined && out.code !== 0) throw new Error(out.msg || 'Lark error ' + out.code);
+    } catch (err) {
+      if (!(err instanceof TypeError)) throw err;
+      await fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body });
+    }
+  }
+
   form.addEventListener('submit', async e => {
     e.preventDefault();
     msg.textContent = ''; msg.className = 'reg-msg';
     const bad = Object.keys(rules).map(n => F(n)).filter(el => !check(el));
     if (bad.length) { bad[0].focus(); return; }
     if (!FORM_ENDPOINT) { msg.textContent = 'Form đăng ký đang được cập nhật, vui lòng quay lại sau ít phút.'; msg.className = 'reg-msg error'; console.warn('[Viltrox LP] Chưa cấu hình FORM_ENDPOINT'); return; }
+    // bẫy spam: bot điền ô ẩn -> giả vờ thành công, không gửi
+    if (F('website').value) { showDone(); return; }
     const payload = {
-      name: F('name').value.trim(), phone: normPhone(F('phone').value), address: F('address').value.trim(),
-      job: jobSel.value === '__other' ? F('jobOther').value.trim() : jobSel.value,
-      website: F('website').value, source: location.href, ua: navigator.userAgent
+      ho_ten: F('name').value.trim(),
+      so_dien_thoai: normPhone(F('phone').value),
+      dia_chi: F('address').value.trim(),
+      nganh_nghe: jobSel.value === '__other' ? F('jobOther').value.trim() : jobSel.value,
+      thoi_gian: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh', hour12: false }),
+      nguon: location.href
     };
     btn.disabled = true; const label = btn.firstChild.textContent; btn.firstChild.textContent = 'ĐANG GỬI… ';
     try {
-      const res = await fetch(FORM_ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
-      const out = await res.json().catch(() => ({ ok: res.ok }));
-      if (!out.ok) throw new Error(out.error || 'failed');
-      form.hidden = true; const done = document.getElementById('regDone'); done.hidden = false; done.focus();
+      await sendToLark(payload);
+      showDone();
       try { localStorage.setItem('viltrox_registered', '1'); } catch (_) {}
     } catch (err) {
       console.error('[Viltrox LP] Gửi form lỗi', err);
