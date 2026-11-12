@@ -136,6 +136,13 @@ strong{font-weight:600;color:#fff}
   .partners{flex-direction:column;align-items:flex-start;gap:14px}
   .partners img{height:auto;width:100%}
 }
+@media (max-width:520px){
+  .nav .btn{padding:9px 16px;font-size:14px}
+  .hero-bar{padding:22px 18px}
+  .products .product{padding:10px}
+  .product .product-info{padding:22px 12px 14px}
+  .tech .tech-body{padding:22px 18px}
+}
 @media (max-width:480px){
   .countdown div{min-width:0;flex:1;padding:8px 6px}
   .countdown b{font-size:21px}
@@ -271,9 +278,16 @@ section{position:relative}
   .host2.flip .host2-photo::before{inset:18px -18px -18px 18px}
   .hosts-intro{grid-template-columns:1fr;gap:16px}
 }
+@media (max-width:900px){
+  .host2.flip .host2-head{justify-content:flex-start}
+}
 @media (max-width:520px){
   .host2-hl li{grid-template-columns:1fr;gap:2px}
-  .film-progress{width:64px}
+  .film-progress{display:none}
+  .film-label{white-space:nowrap;letter-spacing:.14em}
+  .host2-head{align-items:flex-end;gap:12px}
+  .host2-no{font-size:44px}
+  .host2-name{font-size:clamp(26px,7.6vw,36px);white-space:nowrap}
 }
 /* ---------- concepts (panel mở rộng) ---------- */
 .cx{display:flex;gap:12px;height:620px}
