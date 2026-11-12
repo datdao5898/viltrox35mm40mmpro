@@ -896,6 +896,11 @@ footer .copy{font-size:13.5px;color:var(--dim)}
               <em class="err">Vui lòng nhập đúng định dạng số điện thoại</em>
             </label>
             <label class="field full">
+              <span>Email <i>*</i></span>
+              <input type="email" name="email" autocomplete="email" inputmode="email" maxlength="120" placeholder="Email" required>
+              <em class="err">Vui lòng nhập đúng định dạng email</em>
+            </label>
+            <label class="field full">
               <span>Địa chỉ</span>
               <input type="text" name="address" autocomplete="street-address" maxlength="250" placeholder="Tỉnh / Thành phố">
             </label>
@@ -957,11 +962,12 @@ footer .copy{font-size:13.5px;color:var(--dim)}
 /* ====== CẤU HÌNH form đăng ký ======
    Đang dùng Google Form (đổ vào Google Sheet viltrox35mm40mmpro, tab "Câu trả lời biểu mẫu 2", Form của kingcomofficial).
    - Google Form: link .../formResponse + mã entry của từng câu hỏi bên dưới
-   - Lark Base:   đổi FORM_ENDPOINT thành URL webhook "Khi nhận được webhook" (JSON: ho_ten, so_dien_thoai, dia_chi, nganh_nghe, thoi_gian, nguon) */
+   - Lark Base:   đổi FORM_ENDPOINT thành URL webhook "Khi nhận được webhook" (JSON: ho_ten, so_dien_thoai, email, dia_chi, nganh_nghe, thoi_gian, nguon) */
 const FORM_ENDPOINT = "https://docs.google.com/forms/d/e/1FAIpQLSenzWlDDiSzGEPrOpdzqimZlW3BfpVkICERl4kqCgaml0B_cQ/formResponse";
 const GOOGLE_FORM_ENTRIES = {
   ho_ten: "entry.1710523915",
   so_dien_thoai: "entry.1605947461",
+  email: "entry.1777531912",
   dia_chi: "entry.543994147",
   nganh_nghe: "entry.407013492"
 };
@@ -983,6 +989,7 @@ const GOOGLE_FORM_ENTRIES = {
   const rules = {
     name: v => v.trim().length >= 2,
     phone: v => /^0[35789]\d{8}$/.test(normPhone(v)),
+    email: v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v.trim()),
     job: v => v.trim().length > 0
   };
   const check = el => { const ok = rules[el.name](el.value); el.closest('.field').classList.toggle('invalid', !ok); el.setAttribute('aria-invalid', !ok); return ok; };
@@ -996,7 +1003,7 @@ const GOOGLE_FORM_ENTRIES = {
     // Google Form: gửi dạng form-urlencoded, no-cors (Google không trả CORS nên không đọc được phản hồi)
     if (FORM_ENDPOINT.includes('docs.google.com/forms/')) {
       const fd = new URLSearchParams();
-      Object.entries(GOOGLE_FORM_ENTRIES).forEach(([k, entry]) => fd.append(entry, data[k] || ''));
+      Object.entries(GOOGLE_FORM_ENTRIES).forEach(([k, entry]) => entry && fd.append(entry, data[k] || ''));
       await fetch(FORM_ENDPOINT, { method: 'POST', mode: 'no-cors', body: fd });
       return;
     }
@@ -1029,6 +1036,7 @@ const GOOGLE_FORM_ENTRIES = {
     const payload = {
       ho_ten: F('name').value.trim(),
       so_dien_thoai: normPhone(F('phone').value),
+      email: F('email').value.trim().toLowerCase(),
       dia_chi: F('address').value.trim(),
       nganh_nghe: F('job').value.trim(),
       thoi_gian: new Date().toLocaleString('vi-VN', { timeZone: 'Asia/Ho_Chi_Minh', hour12: false }),
