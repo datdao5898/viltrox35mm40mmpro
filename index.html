@@ -220,6 +220,7 @@ section{position:relative}
 .host2-tag::before{content:"";width:22px;height:2px;background:var(--accent)}
 .host2-name{font-family:var(--f-display);font-weight:800;font-size:clamp(40px,6.4vw,88px);line-height:1.18;padding-top:.3em;letter-spacing:-.01em;text-transform:uppercase;margin-top:-.12em}
 .host2-body{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(32px,5vw,72px);align-items:start}
+.host2.flip .host2-body{grid-template-columns:minmax(0,7fr) minmax(0,5fr)}
 .host2.flip .host2-photo{order:2}
 .host2.flip .host2-head{flex-direction:row-reverse;justify-content:flex-end;text-align:right}
 .host2.flip .host2-head>div{margin-left:auto}
@@ -263,6 +264,7 @@ section{position:relative}
 @media (max-width:900px){
   .host2{padding-top:56px}
   .host2-body{grid-template-columns:1fr}
+  .host2.flip .host2-body{grid-template-columns:1fr}
   .host2.flip .host2-photo{order:0}
   .host2.flip .host2-head{flex-direction:row;text-align:left}
   .host2.flip .host2-head>div{margin-left:0}
